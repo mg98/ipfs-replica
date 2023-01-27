@@ -1,0 +1,21 @@
+project_name: 'scriptup'
+
+builds:
+  - main: '.'
+    goos: ['linux']
+    goarch: ['386', 'amd64', 'arm', 'arm64']
+    goarm: ['6', '7']
+    env:
+      - CGO_ENABLED=0
+
+changelog:
+  sort: 'asc'
+  filters:
+    exclude: ['^docs:', '^test:', 'Merge pull request', 'Merge branch']
+
+nfpms:
+  - homepage: 'https://github.com/mg98/ipfs-replicate'
+    description: 'Replicates IPFS distributed data structure locally, based on network traces.'
+    maintainer: 'Marcel Gregoriadis <m.gregoriadis@gmail.com>'
+    formats: ['deb', 'rpm']
+    dependencies: ['git']
