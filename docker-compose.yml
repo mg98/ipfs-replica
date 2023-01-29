@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  graph:
+    image: redislabs/redisgraph
+    container_name: redisgraph
+    ports:
+      - "6379:6379"
+    restart: on-failure
+    volumes:
+      - graph:/data
+  app:
+    build:
+      context: .
+    container_name: ipfs-replica
+    restart: on-failure
+    volumes:
+      - ./:/app
+    depends_on:
+      - graph
+    network_mode: "host"
+    environment:
+      - RG_HOST=127.0.0.1:6379
+
+volumes:
+  graph:
+    driver: local
