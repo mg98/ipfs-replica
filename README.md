@@ -1,6 +1,5 @@
 # IPFS Replicate
 
-[![GoDoc](http://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/mg98/ipfs-replicate)
 [![Test](https://github.com/mg98/ipfs-replicate/actions/workflows/test.yml/badge.svg)](https://github.com/mg98/ipfs-replicate/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/mg98/ipfs-replicate/branch/main/graph/badge.svg?token=R3OYXX1HC7)](https://codecov.io/gh/mg98/ipfs-replicate)
 [![Go Report Card](https://goreportcard.com/badge/github.com/mg98/ipfs-replicate?)](https://goreportcard.com/report/github.com/mg98/ipfs-replicate)
@@ -19,12 +18,12 @@ by recursively fetching the contents of the requested CIDs
 and populating the local database and data folder.
 
 Furthermore, this tool allows you to export those user events.
-This can be useful in combination with the locally produced data structure for analyses that also contemplates user behavior.
+This can be useful in combination with the locally produced data structure for analyses that also contemplate user behavior.
 
 ## Setup and Run
 
 As mentioned in the previous section, this program depends on IPFS traces produced by another project.
-Learn how to build and run this project [here](https://github.com/trudi-group/ipfs-metric-exporter#building).
+Learn how to build and run that project [here](https://github.com/trudi-group/ipfs-metric-exporter#building).
 
 It has to be running **before and while** the execution of _this_ software!
 
