@@ -50,5 +50,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: mg98/ipfs-replicate:${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
