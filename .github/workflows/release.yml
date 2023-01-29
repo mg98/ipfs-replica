@@ -2,7 +2,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+' # Only build tag with semantic versioning format
+      - '[0-9]+.[0-9]+.[0-9]+' # Only build tag with semantic versioning format
 jobs:
   build:
     runs-on: ubuntu-latest
