@@ -1,8 +1,9 @@
 FROM golang:1.19-alpine
 RUN apk add build-base
 WORKDIR /app
-COPY go.* ./
+COPY . .
 RUN go mod download
-COPY *.go ./
-RUN go build .
-CMD ["/app/ipfs-replicate"]
+RUN go mod verify
+RUN go build -o ipfs_replicate
+RUN chmod +x ipfs_replicate
+CMD ["/app/ipfs_replicate"]

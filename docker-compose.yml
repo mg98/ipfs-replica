@@ -2,24 +2,88 @@ version: "3.8"
 
 services:
   graph:
-    image: redislabs/redisgraph
     container_name: redisgraph
+    image: redislabs/redisgraph
     ports:
       - "6379:6379"
     restart: on-failure
     volumes:
       - graph:/data
+
   app:
-    build:
-      context: .
-    container_name: ipfs-replica
+    container_name: ipfs-replicate
+    build: .
     restart: on-failure
     volumes:
-      - ./:/app
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./events:/app/events
+    env_file:
+      - ./.env
+    command: ["./ipfs_replicate", "--log-events", "--log-output"]
     depends_on:
+      - kubo-mexport
       - graph
     network_mode: "host"
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: "rabbitmq:3.10"
+    restart: unless-stopped
+    hostname: rmq
+    expose:
+      - 15692
+    # Healthcheck from https://devops.stackexchange.com/questions/12092/docker-compose-healthcheck-for-rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q status
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    volumes:
+      - ./ipfs-metric-exporter/docker-compose/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./ipfs-metric-exporter/docker-compose/rabbitmq.advanced.config:/etc/rabbitmq/advanced.config
+      - ./ipfs-metric-exporter/docker-compose/rabbitmq-definitions.json:/etc/rabbitmq/definitions.json
+      - rabbitmq_data:/var/lib/rabbitmq/mnesia/rabbit@rmq
+      - rabbitmq_logs:/var/log/rabbitmq/log
+    ports:
+      - "5672:5672"
+
+  kubo-mexport:
+    container_name: kubo-mexport
+    hostname: 'docker_compose_monitor_01'
+    image: "ghcr.io/trudi-group/kubo-mexport:latest"
+    restart: unless-stopped
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    links:
+      - rabbitmq
+    volumes:
+      - ipfs_01_path:/data/ipfs
+      - ./ipfs-metric-exporter/docker-compose/001_configure_ipfs.sh:/container-init.d/001_configure_ipfs.sh
+    ports:
+      - "4001:4001/tcp"
+      - "4001:4001/udp"
+
+  node-exporter:
+    container_name: node-exporter
+    image: prom/node-exporter:v1.4.0
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: unless-stopped
+    expose:
+      - 9100
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
 
 volumes:
   graph:
     driver: local
+  ipfs_01_path:
+  rabbitmq_data:
+  rabbitmq_logs:

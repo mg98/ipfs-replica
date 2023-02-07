@@ -6,41 +6,36 @@
 ![License](https://img.shields.io/github/license/mg98/ipfs-replicate)
 
 This software lets you replicate the distributed DAG of content blocks in IPFS locally, based on network traces.
-To this end, it reproduces the structure in a RedisGraph database and downloads raw data blocks to disk.
+To this end, it replicates the data structure in a RedisGraph database and downloads raw data blocks to disk.
 
 ## How Does It Work?
 
-This program is meant to be used in combination with the [IPFS Metric Exporter](https://github.com/trudi-group/ipfs-metric-exporter),
+This program uses [IPFS Metric Exporter](https://github.com/trudi-group/ipfs-metric-exporter),
 which is a plugin to IPFS that exports (among other things) the CID requests from the P2P gossip to a RabbitMQ exchange instance.
 
-**IPFS Replicate** subscribes to this exchange and processes incoming messages 
+**IPFS Replicate** subscribes to this exchange and processes incoming messages
 by recursively fetching the contents of the requested CIDs
 and populating the local database and data folder.
+
+The raw data blocks are written as files to disk while the data structure is persisted in a RedisGraph database.
 
 Furthermore, this tool allows you to export those user events.
 This can be useful in combination with the locally produced data structure for analyses that also contemplate user behavior.
 
 ## Setup and Run
 
-As mentioned in the previous section, this program depends on IPFS traces produced by another project.
-Learn how to build and run that project [here](https://github.com/trudi-group/ipfs-metric-exporter#building).
-
-It has to be running **before and while** the execution of _this_ software!
-
-Furthermore, this software requires a running RedisGraph instance.
-To quickly spin something up, you can use the following command.
+To quickly spin something up, you can launch the infrastructure using:
 
 ```sh
-docker run -p 6379:6379 redislabs/redisgraph
+docker-compose up
 ```
 
-Finally, you can run this program by executing the [binary](https://github.com/mg98/ipfs-replicate/releases).
+If you want to run this program without Docker, 
+you can download the [binary](https://github.com/mg98/ipfs-replicate/releases) directly
+or build this project from source using `go build.`.
 
-If needed, you can adjust some [environment variables](./.env.example). 
-
-Also, take note of the CLI options (`./ipfs-replica --help`).
-
-To build this project from source, you can also clone this repository and build using Go (`go build .`).
+Note that this program depends on other components, which you can be comprehended from the [`docker-compose.yml`](./docker-compose.yml).
+You might then want to adjust some [environment variables](./.env.example).
 
 ## Author Notes
 

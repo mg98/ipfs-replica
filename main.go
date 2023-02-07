@@ -7,12 +7,13 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	amqp "github.com/rabbitmq/amqp091-go"
 	"io"
 	"log"
 	_ "net/http/pprof"
 	"os"
 	"time"
+
+	amqp "github.com/rabbitmq/amqp091-go"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/korovkin/limiter"
@@ -76,7 +77,7 @@ func main() {
 	if *logOutput {
 		var err error
 		logF, err = os.OpenFile(
-			fmt.Sprintf("execution_%s.log", time.Now().Format("20060201150405")),
+			fmt.Sprintf("logs/%s.log", time.Now().Format("20060201150405")),
 			os.O_APPEND|os.O_CREATE|os.O_WRONLY,
 			0644,
 		)
@@ -91,7 +92,7 @@ func main() {
 	if *logEvents {
 		var err error
 		eventsLogFile, err = os.OpenFile(
-			fmt.Sprintf("events_%s.json", time.Now().Format("20060201150405")),
+			fmt.Sprintf("events/%s.json", time.Now().Format("20060201150405")),
 			os.O_APPEND|os.O_CREATE|os.O_WRONLY,
 			0644,
 		)

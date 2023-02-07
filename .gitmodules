@@ -1,0 +1,3 @@
+[submodule "ipfs-metric-exporter"]
+	path = ipfs-metric-exporter
+	url = https://github.com/trudi-group/ipfs-metric-exporter
