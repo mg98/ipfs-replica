@@ -1,4 +1,7 @@
-.github/
+.git*
 .*
 *.md
 LICENSE
+logs
+events
+data

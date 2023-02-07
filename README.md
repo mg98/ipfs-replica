@@ -32,7 +32,7 @@ docker-compose up
 
 If you want to run this program without Docker, 
 you can download the [binary](https://github.com/mg98/ipfs-replicate/releases) directly
-or build this project from source using `go build.`.
+or build this project from source (`go build .`).
 
 Note that this program depends on other components, which you can be comprehended from the [`docker-compose.yml`](./docker-compose.yml).
 You might then want to adjust some [environment variables](./.env.example).
